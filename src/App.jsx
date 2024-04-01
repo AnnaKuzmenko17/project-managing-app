@@ -7,7 +7,8 @@ import SelectedProject from "./components/SelectedProject";
 function App() {
   const[projectsState, setProjectsState] = useState({
     selectedProjectId: undefined,
-    projects: []
+    projects: [],
+    tasks: []
   })
 
   function handleSelectProject(id) {
@@ -47,7 +48,7 @@ function App() {
       }
       return {
         ...prevState,
-        selectedProjectId: undefined,
+        selectedProjectId: newProjectId,
         projects: [...prevState.projects, newProject]
       }
     })
@@ -63,9 +64,40 @@ function App() {
     });
   }
 
+  function handleAddTask(text) {
+    setProjectsState((prevState) => {
+      const newTaskId = Math.random();
+
+      const newTask = {
+        projectId: prevState.selectedProjectId,
+        text: text,
+        id: newTaskId
+      }
+
+      return {
+        ...prevState,
+        tasks: [newTask, ...prevState.tasks]
+      }
+    })
+  }
+
+  function handleDeleteTask(id) {
+    setProjectsState((prevProjectsState) => {
+      return {
+        ...prevProjectsState,
+        tasks: prevProjectsState.tasks.filter((task) => task.id !== id)
+      }
+    });
+  }
+
   const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProjectId);
 
-  let content = <SelectedProject project={selectedProject} onDelete={handleDeleteProject}/>;
+  let content = <SelectedProject 
+  project={selectedProject} 
+  onDelete={handleDeleteProject} 
+  onAddTask={handleAddTask} 
+  onDeleteTask={handleDeleteTask}
+  tasks={projectsState.tasks}/>;
 
   if (projectsState.selectedProjectId === null) {
     content = <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject}/>
@@ -74,7 +106,12 @@ function App() {
   }
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectsSidebar onSelectProject={handleSelectProject} onStartAddProject={handleStartAddProject} projects={projectsState.projects}/>
+      <ProjectsSidebar 
+      onSelectProject={handleSelectProject} 
+      onStartAddProject={handleStartAddProject} 
+      projects={projectsState.projects}
+      selectedProjectId={projectsState.selectedProjectId}
+      />
       {content}
     </main>
   );

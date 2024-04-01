@@ -13,12 +13,12 @@ export default function ProjectsSidebar({ onStartAddProject, projects, onSelectP
       </div>
       <ul className="mt-8" >
         {projects.map(project => {
-          let classes = "w-full text-left px-2 py-1 rounded-sm my-1";
+          let classes = "w-full text-left px-2 py-1 rounded-sm my-1 hover:text-stone-200 hover:bg-stone-700";
 
           if(project.id === selectedProjectId) {
-            classes += "bg-stone-800 text-stone-200"
+            classes += " bg-stone-800 text-stone-200";
           } else {
-            classes += "text-stone-400"
+            classes += " text-stone-400";
           }
 
           return (<li key={project.id}>
